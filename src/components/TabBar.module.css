@@ -1,0 +1,40 @@
+.tabBar {
+  display: flex;
+  padding: 0 24px;
+  border-bottom: 1px solid var(--border);
+  flex-shrink: 0;
+}
+
+.tab {
+  flex: 1;
+  padding: 11px 0;
+  font-size: 14px;
+  font-weight: 400;
+  color: var(--text-tertiary);
+  text-align: center;
+  position: relative;
+  transition: color 0.2s ease;
+  min-height: 44px;
+}
+
+.tab::after {
+  content: '';
+  position: absolute;
+  bottom: -1px;
+  left: 10%;
+  right: 10%;
+  height: 2px;
+  background: var(--tab-primary);
+  border-radius: 2px 2px 0 0;
+  transform: scaleX(0);
+  transition: transform 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.tab.active {
+  color: var(--tab-primary);
+  font-weight: 500;
+}
+
+.tab.active::after {
+  transform: scaleX(1);
+}
