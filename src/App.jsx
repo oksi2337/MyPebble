@@ -1,18 +1,61 @@
-import { useState, useCallback } from 'react'
+import { useState, useCallback, useEffect } from 'react'
 import { useLocalStorage } from './hooks/useLocalStorage'
+import { useAuth } from './hooks/useAuth'
+import { supabase } from './lib/supabase'
 import Header from './components/Header'
 import TabBar from './components/TabBar'
 import TodoList from './components/TodoList'
 import AddTodoBar from './components/AddTodoBar'
+import LoginScreen from './components/LoginScreen'
+
+const fromDb = (row) => ({
+  id: row.id,
+  text: row.text,
+  startDate: row.start_date,
+  deadline: row.deadline,
+  completed: row.completed,
+  createdAt: row.created_at,
+  completedAt: row.completed_at,
+})
+
+const toDb = (todo, userId, tab) => ({
+  id: todo.id,
+  user_id: userId,
+  text: todo.text,
+  start_date: todo.startDate,
+  deadline: todo.deadline,
+  completed: todo.completed,
+  created_at: todo.createdAt,
+  completed_at: todo.completedAt,
+  tab,
+})
 
 function App() {
+  const { user, loading, signInWithGoogle, signOut } = useAuth()
   const [activeTab, setActiveTab] = useLocalStorage('pebble_active_tab', 'personal')
-  const [personalTodos, setPersonalTodos] = useLocalStorage('pebble_personal', [])
-  const [workTodos, setWorkTodos] = useLocalStorage('pebble_work', [])
+  const [personalTodos, setPersonalTodos] = useState([])
+  const [workTodos, setWorkTodos] = useState([])
   const [recentlyAddedId, setRecentlyAddedId] = useState(null)
 
   const todos = activeTab === 'personal' ? personalTodos : workTodos
   const setTodos = activeTab === 'personal' ? setPersonalTodos : setWorkTodos
+
+  useEffect(() => {
+    if (!user) {
+      setPersonalTodos([])
+      setWorkTodos([])
+      return
+    }
+    supabase
+      .from('todos')
+      .select('*')
+      .eq('user_id', user.id)
+      .then(({ data }) => {
+        if (!data) return
+        setPersonalTodos(data.filter(r => r.tab === 'personal').map(fromDb))
+        setWorkTodos(data.filter(r => r.tab === 'work').map(fromDb))
+      })
+  }, [user])
 
   const addTodo = useCallback((text, startDate, deadline) => {
     const newTodo = {
@@ -27,34 +70,46 @@ function App() {
     setTodos(prev => [...prev, newTodo])
     setRecentlyAddedId(newTodo.id)
     setTimeout(() => setRecentlyAddedId(null), 700)
-  }, [setTodos])
+    supabase.from('todos').insert(toDb(newTodo, user.id, activeTab))
+  }, [setTodos, user, activeTab])
 
   const toggleTodo = useCallback((id) => {
-    setTodos(prev => prev.map(todo =>
-      todo.id === id
-        ? {
-            ...todo,
-            completed: !todo.completed,
-            completedAt: !todo.completed ? new Date().toISOString() : null,
-          }
-        : todo
-    ))
+    setTodos(prev => prev.map(todo => {
+      if (todo.id !== id) return todo
+      const updated = {
+        ...todo,
+        completed: !todo.completed,
+        completedAt: !todo.completed ? new Date().toISOString() : null,
+      }
+      supabase.from('todos')
+        .update({ completed: updated.completed, completed_at: updated.completedAt })
+        .eq('id', id)
+      return updated
+    }))
   }, [setTodos])
 
   const deleteTodo = useCallback((id) => {
     setTodos(prev => prev.filter(todo => todo.id !== id))
+    supabase.from('todos').delete().eq('id', id)
   }, [setTodos])
 
   const editTodo = useCallback((id, updates) => {
-    setTodos(prev => prev.map(todo =>
-      todo.id === id ? { ...todo, ...updates } : todo
-    ))
+    setTodos(prev => prev.map(todo => todo.id === id ? { ...todo, ...updates } : todo))
+    const dbUpdates = {}
+    if ('text' in updates) dbUpdates.text = updates.text
+    if ('startDate' in updates) dbUpdates.start_date = updates.startDate
+    if ('deadline' in updates) dbUpdates.deadline = updates.deadline
+    supabase.from('todos').update(dbUpdates).eq('id', id)
   }, [setTodos])
+
+  if (loading) return null
+
+  if (!user) return <LoginScreen onGoogleLogin={signInWithGoogle} />
 
   return (
     <div className="app-shell">
       <div className="app-container" data-tab={activeTab}>
-        <Header />
+        <Header user={user} onSignOut={signOut} />
         <TabBar activeTab={activeTab} onTabChange={setActiveTab} />
         <TodoList
           key={activeTab}
