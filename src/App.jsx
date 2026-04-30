@@ -37,11 +37,16 @@ const toDb = (todo, userId, tab) => ({
 function App() {
   const { user, loading, signInWithGoogle, signOut } = useAuth()
   const [activeTab, setActiveTab] = useLocalStorage('pebble_active_tab', 'personal')
+  const [darkMode, setDarkMode] = useLocalStorage('pebble_dark_mode', false)
   const [personalTodos, setPersonalTodos] = useState([])
   const [workTodos, setWorkTodos] = useState([])
   const [recentlyAddedId, setRecentlyAddedId] = useState(null)
   const [selectedTodoId, setSelectedTodoId] = useState(null)
   const [noteOpen, setNoteOpen] = useState(false)
+
+  useEffect(() => {
+    document.documentElement.setAttribute('data-theme', darkMode ? 'dark' : 'light')
+  }, [darkMode])
 
   const todos = activeTab === 'personal' ? personalTodos : workTodos
   const setTodos = activeTab === 'personal' ? setPersonalTodos : setWorkTodos
@@ -124,7 +129,7 @@ function App() {
   return (
     <div className="app-shell">
       <div className="app-container" data-tab={activeTab}>
-        <Header user={user} onSignOut={signOut} onNoteOpen={() => setNoteOpen(true)} />
+        <Header user={user} onSignOut={signOut} onNoteOpen={() => setNoteOpen(true)} darkMode={darkMode} onToggleDark={() => setDarkMode(v => !v)} />
         <TabBar activeTab={activeTab} onTabChange={setActiveTab} />
         <TodoList
           key={activeTab}

@@ -138,33 +138,31 @@
 
 /* ── dark mode ── */
 
-@media (prefers-color-scheme: dark) {
-  .shell {
-    background: #141210;
-  }
+:global(html[data-theme="dark"]) .shell {
+  background: #141210;
+}
 
-  .card {
-    background: #2C2824;
-    border: 1px solid rgba(255, 255, 255, 0.09);
-    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.6);
-  }
+:global(html[data-theme="dark"]) .card {
+  background: #2C2824;
+  border: 1px solid rgba(255, 255, 255, 0.09);
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.6);
+}
 
-  .logo {
-    color: #EDE8E2;
-  }
+:global(html[data-theme="dark"]) .logo {
+  color: #EDE8E2;
+}
 
-  .desc {
-    color: #8A7E78;
-  }
+:global(html[data-theme="dark"]) .desc {
+  color: #8A7E78;
+}
 
-  .googleBtn {
-    background: #38322E;
-    border-color: rgba(255, 255, 255, 0.14);
-    color: #EDE8E2;
-  }
+:global(html[data-theme="dark"]) .googleBtn {
+  background: #38322E;
+  border-color: rgba(255, 255, 255, 0.14);
+  color: #EDE8E2;
+}
 
-  .googleBtn:hover {
-    background: #423C38;
-    border-color: rgba(255, 255, 255, 0.22);
-  }
+:global(html[data-theme="dark"]) .googleBtn:hover {
+  background: #423C38;
+  border-color: rgba(255, 255, 255, 0.22);
 }
