@@ -1,5 +1,5 @@
 import { useState, useRef, useCallback } from 'react'
-import { useDateAutoAdvance } from '../hooks/useDateAutoAdvance'
+import DateInput from './DateInput'
 import styles from './AddTodoBar.module.css'
 
 export default function AddTodoBar({ onAdd }) {
@@ -36,7 +36,6 @@ export default function AddTodoBar({ onAdd }) {
     setDateError('')
   }, [])
 
-  const dateAdv = useDateAutoAdvance()
   const hasDates = startDate || deadline
 
   return (
@@ -44,24 +43,16 @@ export default function AddTodoBar({ onAdd }) {
       <div className={`${styles.dateRow} ${showDates ? styles.dateRowOpen : ''}`}>
         <div className={styles.dateFields}>
           <span className={styles.dateLabel}>시작</span>
-          <input
-            type="date"
-            className={styles.dateInput}
+          <DateInput
             value={startDate}
-            onChange={e => { setStartDate(e.target.value); setDateError('') }}
-            onFocus={dateAdv.onFocus}
-            onKeyDown={dateAdv.onKeyDown}
+            onChange={v => { setStartDate(v); setDateError('') }}
             tabIndex={showDates ? 0 : -1}
           />
           <span className={styles.dateSep}>~</span>
           <span className={styles.dateLabel}>마감</span>
-          <input
-            type="date"
-            className={styles.dateInput}
+          <DateInput
             value={deadline}
-            onChange={e => { setDeadline(e.target.value); setDateError('') }}
-            onFocus={dateAdv.onFocus}
-            onKeyDown={dateAdv.onKeyDown}
+            onChange={v => { setDeadline(v); setDateError('') }}
             tabIndex={showDates ? 0 : -1}
           />
         </div>

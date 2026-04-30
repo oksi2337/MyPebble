@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react'
-import { useDateAutoAdvance } from '../hooks/useDateAutoAdvance'
+import DateInput from './DateInput'
 import styles from './DetailPanel.module.css'
 
 export default function DetailPanel({ todo, onClose, onEdit }) {
@@ -9,7 +9,6 @@ export default function DetailPanel({ todo, onClose, onEdit }) {
   const [startDate, setStartDate] = useState(todo.startDate || '')
   const [deadline, setDeadline] = useState(todo.deadline || '')
   const [dateError, setDateError] = useState('')
-  const dateAdv = useDateAutoAdvance()
 
   useEffect(() => {
     requestAnimationFrame(() => setVisible(true))
@@ -72,24 +71,16 @@ export default function DetailPanel({ todo, onClose, onEdit }) {
             <div className={styles.dateRows}>
               <div className={styles.dateRow}>
                 <span className={styles.dateLabel}>시작일</span>
-                <input
-                  type="date"
-                  className={styles.dateInput}
+                <DateInput
                   value={startDate}
-                  onChange={e => { setStartDate(e.target.value); setDateError('') }}
-                  onFocus={dateAdv.onFocus}
-                  onKeyDown={dateAdv.onKeyDown}
+                  onChange={v => { setStartDate(v); setDateError('') }}
                 />
               </div>
               <div className={styles.dateRow}>
                 <span className={styles.dateLabel}>마감일</span>
-                <input
-                  type="date"
-                  className={styles.dateInput}
+                <DateInput
                   value={deadline}
-                  onChange={e => { setDeadline(e.target.value); setDateError('') }}
-                  onFocus={dateAdv.onFocus}
-                  onKeyDown={dateAdv.onKeyDown}
+                  onChange={v => { setDeadline(v); setDateError('') }}
                 />
               </div>
               {dateError && <p className={styles.dateError}>{dateError}</p>}

@@ -1,0 +1,47 @@
+.wrap {
+  display: inline-flex;
+  align-items: center;
+  gap: 1px;
+  border: 1.5px solid var(--border, #e8e8e0);
+  border-radius: 8px;
+  padding: 4px 8px;
+  background: #fff;
+  transition: border-color 0.15s;
+}
+
+.wrap:focus-within {
+  border-color: var(--tab-primary);
+}
+
+.year {
+  width: 4ch;
+  border: none;
+  outline: none;
+  background: transparent;
+  font-size: 13px;
+  color: var(--text-primary);
+  text-align: center;
+  font-family: inherit;
+}
+
+.part {
+  width: 2.2ch;
+  border: none;
+  outline: none;
+  background: transparent;
+  font-size: 13px;
+  color: var(--text-primary);
+  text-align: center;
+  font-family: inherit;
+}
+
+.year::placeholder,
+.part::placeholder {
+  color: var(--text-tertiary, #ccc);
+}
+
+.sep {
+  font-size: 13px;
+  color: var(--text-tertiary);
+  user-select: none;
+}

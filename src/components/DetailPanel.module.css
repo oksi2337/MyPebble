@@ -122,21 +122,6 @@
   color: var(--text-secondary, #555);
 }
 
-.dateInput {
-  font-size: 13px;
-  border: 1.5px solid var(--border, #e8e8e0);
-  border-radius: 8px;
-  padding: 5px 10px;
-  background: #fff;
-  color: var(--text-primary);
-  outline: none;
-  cursor: pointer;
-  transition: border-color 0.15s;
-}
-
-.dateInput:focus {
-  border-color: var(--tab-primary);
-}
 
 .dateError {
   font-size: 11px;
