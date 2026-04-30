@@ -21,7 +21,6 @@ export default function DateInput({ value, onChange, tabIndex = 0 }) {
     }
   }, [value])
 
-  // 연/월/일 모두 완성됐을 때만 emit — 부분 값으로 부모 상태를 덮어쓰지 않음
   const emit = (yr, mo, dy) => {
     if (yr.length === 4 && mo.length === 2 && dy.length === 2) {
       onChange(`${yr}-${mo}-${dy}`)
@@ -38,41 +37,48 @@ export default function DateInput({ value, onChange, tabIndex = 0 }) {
 
   const onMonth = (e) => {
     const raw = e.target.value.replace(/\D/g, '').slice(0, 2)
+
+    // 첫 자리가 2-9이면 단독으로 완성 가능한 월 (02-09)
+    if (raw.length === 1 && +raw >= 2) {
+      const val = raw.padStart(2, '0')
+      setParts(p => ({ ...p, m: val }))
+      emit(y, val, d)
+      dayRef.current?.focus()
+      return
+    }
+
     if (raw.length === 2) {
       const val = String(Math.min(12, Math.max(1, +raw || 1))).padStart(2, '0')
       setParts(p => ({ ...p, m: val }))
       emit(y, val, d)
       dayRef.current?.focus()
-    } else {
-      setParts(p => ({ ...p, m: raw }))
+      return
     }
-  }
 
-  const onMonthBlur = () => {
-    if (m.length === 1) {
-      const val = m.padStart(2, '0')
-      setParts(p => ({ ...p, m: val }))
-      emit(y, val, d)
-    }
+    // 첫 자리 0 또는 1 → 두 번째 자리 대기
+    setParts(p => ({ ...p, m: raw }))
   }
 
   const onDay = (e) => {
     const raw = e.target.value.replace(/\D/g, '').slice(0, 2)
+
+    // 첫 자리가 4-9이면 단독으로 완성 가능한 일 (04-09)
+    if (raw.length === 1 && +raw >= 4) {
+      const val = raw.padStart(2, '0')
+      setParts(p => ({ ...p, d: val }))
+      emit(y, m, val)
+      return
+    }
+
     if (raw.length === 2) {
       const val = String(Math.min(31, Math.max(1, +raw || 1))).padStart(2, '0')
       setParts(p => ({ ...p, d: val }))
       emit(y, m, val)
-    } else {
-      setParts(p => ({ ...p, d: raw }))
+      return
     }
-  }
 
-  const onDayBlur = () => {
-    if (d.length === 1) {
-      const val = d.padStart(2, '0')
-      setParts(p => ({ ...p, d: val }))
-      emit(y, m, val)
-    }
+    // 첫 자리 0-3 → 두 번째 자리 대기
+    setParts(p => ({ ...p, d: raw }))
   }
 
   return (
@@ -95,8 +101,9 @@ export default function DateInput({ value, onChange, tabIndex = 0 }) {
         className={styles.part}
         value={m}
         onChange={onMonth}
-        onBlur={onMonthBlur}
-        onKeyDown={e => { if (e.key === 'Backspace' && !m) e.currentTarget.closest('[class]').querySelector('input').focus() }}
+        onKeyDown={e => {
+          if (e.key === 'Backspace' && !m) e.currentTarget.closest('div').querySelector('input').focus()
+        }}
         placeholder="MM"
         maxLength={2}
         tabIndex={tabIndex}
@@ -109,8 +116,9 @@ export default function DateInput({ value, onChange, tabIndex = 0 }) {
         className={styles.part}
         value={d}
         onChange={onDay}
-        onBlur={onDayBlur}
-        onKeyDown={e => { if (e.key === 'Backspace' && !d) monthRef.current?.focus() }}
+        onKeyDown={e => {
+          if (e.key === 'Backspace' && !d) monthRef.current?.focus()
+        }}
         placeholder="DD"
         maxLength={2}
         tabIndex={tabIndex}
