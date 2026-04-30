@@ -4,6 +4,9 @@ import styles from './NotePanel.module.css'
 
 const LOCAL_KEY = 'pebble_user_note'
 
+const PLACEHOLDERS = ['휘발되기 전에', '잊기 전에 잡기', '뇌 임시저장']
+const randomPlaceholder = () => PLACEHOLDERS[Math.floor(Math.random() * PLACEHOLDERS.length)]
+
 const saveToSupabase = (userId, content) =>
   supabase.from('user_notes').upsert({
     user_id: userId,
@@ -14,6 +17,7 @@ const saveToSupabase = (userId, content) =>
 export default function NotePanel({ userId, onClose }) {
   const [visible, setVisible] = useState(false)
   const [content, setContent] = useState(() => localStorage.getItem(LOCAL_KEY) ?? '')
+  const [placeholder] = useState(randomPlaceholder)
   const saveTimer = useRef(null)
   const textareaRef = useRef(null)
 
@@ -76,7 +80,7 @@ export default function NotePanel({ userId, onClose }) {
           className={styles.textarea}
           value={content}
           onChange={e => handleChange(e.target.value)}
-          placeholder="깨똑 나에게 보내기 대신"
+          placeholder={placeholder}
         />
       </div>
     </div>
