@@ -3,7 +3,7 @@ import { sortTodos } from '../utils/sortTodos'
 import TodoItem from './TodoItem'
 import styles from './TodoList.module.css'
 
-export default function TodoList({ todos, onToggle, onDelete, onEdit, recentlyAddedId }) {
+export default function TodoList({ todos, onToggle, onDelete, onOpenDetail, recentlyAddedId }) {
   const sorted = useMemo(() => sortTodos(todos), [todos])
   const incomplete = sorted.filter(t => !t.completed)
   const completed = sorted.filter(t => t.completed)
@@ -31,7 +31,7 @@ export default function TodoList({ todos, onToggle, onDelete, onEdit, recentlyAd
           todo={todo}
           onToggle={onToggle}
           onDelete={onDelete}
-          onEdit={onEdit}
+          onOpenDetail={onOpenDetail}
           isNew={todo.id === recentlyAddedId}
         />
       ))}
@@ -46,7 +46,7 @@ export default function TodoList({ todos, onToggle, onDelete, onEdit, recentlyAd
               todo={todo}
               onToggle={onToggle}
               onDelete={onDelete}
-              onEdit={onEdit}
+              onOpenDetail={onOpenDetail}
               isNew={false}
             />
           ))}

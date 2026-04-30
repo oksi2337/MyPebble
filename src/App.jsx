@@ -7,6 +7,7 @@ import TabBar from './components/TabBar'
 import TodoList from './components/TodoList'
 import AddTodoBar from './components/AddTodoBar'
 import LoginScreen from './components/LoginScreen'
+import DetailPanel from './components/DetailPanel'
 
 const fromDb = (row) => ({
   id: row.id,
@@ -16,6 +17,7 @@ const fromDb = (row) => ({
   completed: row.completed,
   createdAt: row.created_at,
   completedAt: row.completed_at,
+  memo: row.memo || null,
 })
 
 const toDb = (todo, userId, tab) => ({
@@ -27,6 +29,7 @@ const toDb = (todo, userId, tab) => ({
   completed: todo.completed,
   created_at: todo.createdAt,
   completed_at: todo.completedAt,
+  memo: todo.memo || null,
   tab,
 })
 
@@ -36,16 +39,17 @@ function App() {
   const [personalTodos, setPersonalTodos] = useState([])
   const [workTodos, setWorkTodos] = useState([])
   const [recentlyAddedId, setRecentlyAddedId] = useState(null)
+  const [selectedTodoId, setSelectedTodoId] = useState(null)
 
   const todos = activeTab === 'personal' ? personalTodos : workTodos
   const setTodos = activeTab === 'personal' ? setPersonalTodos : setWorkTodos
 
+  const selectedTodo = selectedTodoId
+    ? [...personalTodos, ...workTodos].find(t => t.id === selectedTodoId)
+    : null
+
   useEffect(() => {
-    if (!user) {
-      setPersonalTodos([])
-      setWorkTodos([])
-      return
-    }
+    if (!user) { setPersonalTodos([]); setWorkTodos([]); return }
     supabase
       .from('todos')
       .select('*')
@@ -57,6 +61,9 @@ function App() {
       })
   }, [user])
 
+  // 탭 전환 시 패널 닫기
+  useEffect(() => { setSelectedTodoId(null) }, [activeTab])
+
   const addTodo = useCallback((text, startDate, deadline) => {
     const newTodo = {
       id: `${Date.now()}-${Math.random().toString(36).slice(2)}`,
@@ -66,6 +73,7 @@ function App() {
       completed: false,
       createdAt: new Date().toISOString(),
       completedAt: null,
+      memo: null,
     }
     setTodos(prev => [...prev, newTodo])
     setRecentlyAddedId(newTodo.id)
@@ -89,21 +97,26 @@ function App() {
   }, [setTodos])
 
   const deleteTodo = useCallback((id) => {
+    setSelectedTodoId(prev => prev === id ? null : prev)
     setTodos(prev => prev.filter(todo => todo.id !== id))
     supabase.from('todos').delete().eq('id', id)
   }, [setTodos])
 
   const editTodo = useCallback((id, updates) => {
-    setTodos(prev => prev.map(todo => todo.id === id ? { ...todo, ...updates } : todo))
+    const updateBoth = (setter) =>
+      setter(prev => prev.map(todo => todo.id === id ? { ...todo, ...updates } : todo))
+    updateBoth(setPersonalTodos)
+    updateBoth(setWorkTodos)
+
     const dbUpdates = {}
     if ('text' in updates) dbUpdates.text = updates.text
     if ('startDate' in updates) dbUpdates.start_date = updates.startDate
     if ('deadline' in updates) dbUpdates.deadline = updates.deadline
+    if ('memo' in updates) dbUpdates.memo = updates.memo
     supabase.from('todos').update(dbUpdates).eq('id', id)
-  }, [setTodos])
+  }, [])
 
   if (loading) return null
-
   if (!user) return <LoginScreen onGoogleLogin={signInWithGoogle} />
 
   return (
@@ -116,11 +129,19 @@ function App() {
           todos={todos}
           onToggle={toggleTodo}
           onDelete={deleteTodo}
-          onEdit={editTodo}
+          onOpenDetail={setSelectedTodoId}
           recentlyAddedId={recentlyAddedId}
         />
         <AddTodoBar onAdd={addTodo} />
       </div>
+
+      {selectedTodo && (
+        <DetailPanel
+          todo={selectedTodo}
+          onClose={() => setSelectedTodoId(null)}
+          onEdit={editTodo}
+        />
+      )}
     </div>
   )
 }

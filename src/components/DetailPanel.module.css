@@ -1,0 +1,168 @@
+.overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0);
+  z-index: 200;
+  display: flex;
+  align-items: flex-end;
+  justify-content: center;
+  transition: background 0.28s ease;
+}
+
+.overlayVisible {
+  background: rgba(0, 0, 0, 0.28);
+}
+
+.panel {
+  width: 100%;
+  max-width: 430px;
+  background: #fff;
+  border-radius: 24px 24px 0 0;
+  max-height: 88dvh;
+  display: flex;
+  flex-direction: column;
+  transform: translateY(100%);
+  transition: transform 0.3s cubic-bezier(0.32, 0.72, 0, 1);
+}
+
+.panelVisible {
+  transform: translateY(0);
+}
+
+.handle {
+  width: 36px;
+  height: 4px;
+  background: #e4e0dc;
+  border-radius: 2px;
+  margin: 12px auto 0;
+  flex-shrink: 0;
+}
+
+.header {
+  padding: 6px 20px 0;
+  flex-shrink: 0;
+}
+
+.backBtn {
+  display: flex;
+  align-items: center;
+  gap: 3px;
+  font-size: 14px;
+  color: var(--text-tertiary);
+  padding: 6px 0;
+  transition: color 0.15s;
+}
+
+.backBtn:hover {
+  color: var(--tab-primary);
+}
+
+.body {
+  padding: 12px 24px 48px;
+  overflow-y: auto;
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 28px;
+}
+
+.titleInput {
+  width: 100%;
+  font-size: 22px;
+  font-weight: 600;
+  color: var(--text-primary);
+  background: transparent;
+  border: none;
+  border-bottom: 2px solid var(--tab-light);
+  outline: none;
+  resize: none;
+  line-height: 1.45;
+  font-family: inherit;
+  padding-bottom: 8px;
+  min-height: 64px;
+  transition: border-color 0.15s;
+}
+
+.titleInput:focus {
+  border-bottom-color: var(--tab-primary);
+}
+
+.section {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.sectionLabel {
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--text-tertiary);
+}
+
+.dateRows {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  background: var(--cream, #fafaf8);
+  border-radius: 14px;
+  padding: 14px 16px;
+}
+
+.dateRow {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.dateLabel {
+  font-size: 14px;
+  color: var(--text-secondary, #555);
+}
+
+.dateInput {
+  font-size: 13px;
+  border: 1.5px solid var(--border, #e8e8e0);
+  border-radius: 8px;
+  padding: 5px 10px;
+  background: #fff;
+  color: var(--text-primary);
+  outline: none;
+  cursor: pointer;
+  transition: border-color 0.15s;
+}
+
+.dateInput:focus {
+  border-color: var(--tab-primary);
+}
+
+.dateError {
+  font-size: 11px;
+  color: #e63946;
+  margin-top: 2px;
+}
+
+.memoInput {
+  width: 100%;
+  min-height: 140px;
+  font-size: 14px;
+  line-height: 1.65;
+  color: var(--text-primary);
+  background: var(--cream, #fafaf8);
+  border: 1.5px solid var(--border, #e8e8e0);
+  border-radius: 14px;
+  padding: 14px 16px;
+  outline: none;
+  resize: none;
+  font-family: inherit;
+  transition: border-color 0.15s;
+}
+
+.memoInput:focus {
+  border-color: var(--tab-primary);
+}
+
+.memoInput::placeholder {
+  color: var(--text-tertiary);
+}
