@@ -1,4 +1,5 @@
 import { useState, useEffect } from 'react'
+import { useDateAutoAdvance } from '../hooks/useDateAutoAdvance'
 import styles from './DetailPanel.module.css'
 
 export default function DetailPanel({ todo, onClose, onEdit }) {
@@ -8,6 +9,7 @@ export default function DetailPanel({ todo, onClose, onEdit }) {
   const [startDate, setStartDate] = useState(todo.startDate || '')
   const [deadline, setDeadline] = useState(todo.deadline || '')
   const [dateError, setDateError] = useState('')
+  const dateAdv = useDateAutoAdvance()
 
   useEffect(() => {
     requestAnimationFrame(() => setVisible(true))
@@ -75,6 +77,8 @@ export default function DetailPanel({ todo, onClose, onEdit }) {
                   className={styles.dateInput}
                   value={startDate}
                   onChange={e => { setStartDate(e.target.value); setDateError('') }}
+                  onFocus={dateAdv.onFocus}
+                  onKeyDown={dateAdv.onKeyDown}
                 />
               </div>
               <div className={styles.dateRow}>
@@ -84,6 +88,8 @@ export default function DetailPanel({ todo, onClose, onEdit }) {
                   className={styles.dateInput}
                   value={deadline}
                   onChange={e => { setDeadline(e.target.value); setDateError('') }}
+                  onFocus={dateAdv.onFocus}
+                  onKeyDown={dateAdv.onKeyDown}
                 />
               </div>
               {dateError && <p className={styles.dateError}>{dateError}</p>}

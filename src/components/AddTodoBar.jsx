@@ -1,4 +1,5 @@
 import { useState, useRef, useCallback } from 'react'
+import { useDateAutoAdvance } from '../hooks/useDateAutoAdvance'
 import styles from './AddTodoBar.module.css'
 
 export default function AddTodoBar({ onAdd }) {
@@ -35,6 +36,7 @@ export default function AddTodoBar({ onAdd }) {
     setDateError('')
   }, [])
 
+  const dateAdv = useDateAutoAdvance()
   const hasDates = startDate || deadline
 
   return (
@@ -47,6 +49,8 @@ export default function AddTodoBar({ onAdd }) {
             className={styles.dateInput}
             value={startDate}
             onChange={e => { setStartDate(e.target.value); setDateError('') }}
+            onFocus={dateAdv.onFocus}
+            onKeyDown={dateAdv.onKeyDown}
             tabIndex={showDates ? 0 : -1}
           />
           <span className={styles.dateSep}>~</span>
@@ -56,6 +60,8 @@ export default function AddTodoBar({ onAdd }) {
             className={styles.dateInput}
             value={deadline}
             onChange={e => { setDeadline(e.target.value); setDateError('') }}
+            onFocus={dateAdv.onFocus}
+            onKeyDown={dateAdv.onKeyDown}
             tabIndex={showDates ? 0 : -1}
           />
         </div>
