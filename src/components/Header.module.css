@@ -47,8 +47,18 @@
   transition: color 0.15s;
 }
 
+/* 라이트모드: 달 아이콘 → 주황 */
 .themeBtn:hover {
-  color: var(--text-primary);
+  color: #E07820;
+}
+
+/* 다크모드: 해 아이콘 → 노란 테두리 + 원 채우기 */
+.themeBtn.isDark:hover {
+  color: #FFD000;
+}
+
+.themeBtn.isDark:hover circle {
+  fill: #FFD000;
 }
 
 .noteBtn {

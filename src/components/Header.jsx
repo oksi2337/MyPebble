@@ -24,13 +24,13 @@ export default function Header({ user, onSignOut, onNoteOpen, darkMode, onToggle
       <p className={styles.date}>{month}월 {date}일 {day}요일</p>
 
       <button
-        className={styles.themeBtn}
+        className={`${styles.themeBtn} ${darkMode ? styles.isDark : ''}`}
         onClick={onToggleDark}
         aria-label={darkMode ? '라이트 모드로 전환' : '다크 모드로 전환'}
       >
         {darkMode ? (
           <svg width="18" height="18" viewBox="0 0 18 18" fill="none">
-            <circle cx="9" cy="9" r="3.5" stroke="currentColor" strokeWidth="1.5"/>
+            <circle cx="9" cy="9" r="3.5" stroke="currentColor" strokeWidth="1.5" fill="none"/>
             <path d="M9 1.5V3M9 15v1.5M1.5 9H3M15 9h1.5M3.7 3.7l1.05 1.05M13.25 13.25l1.05 1.05M3.7 14.3l1.05-1.05M13.25 4.75l1.05-1.05" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round"/>
           </svg>
         ) : (
