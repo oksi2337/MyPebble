@@ -1,12 +1,7 @@
 import { useState, useRef, useCallback, useMemo } from 'react'
 import DdayBadge from './DdayBadge'
+import { formatDate } from '../utils/sortTodos'
 import styles from './TodoItem.module.css'
-
-function formatDate(dateStr) {
-  if (!dateStr) return ''
-  const [, m, d] = dateStr.split('-').map(Number)
-  return `${m}/${d}`
-}
 
 export default function TodoItem({ todo, onToggle, onDelete, onOpenDetail, isNew }) {
   const [completing, setCompleting] = useState(false)

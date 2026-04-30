@@ -1,3 +1,11 @@
+export function formatDate(dateStr) {
+  if (!dateStr) return ''
+  const [y, m, d] = dateStr.split('-').map(Number)
+  const currentYear = new Date().getFullYear()
+  if (y !== currentYear) return `${y}/${m}/${d}`
+  return `${m}/${d}`
+}
+
 export function sortTodos(todos) {
   const incomplete = todos.filter(t => !t.completed)
   const completed = todos.filter(t => t.completed)

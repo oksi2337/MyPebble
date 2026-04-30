@@ -58,17 +58,17 @@
 }
 
 .body {
-  padding: 12px 24px 48px;
+  padding: 8px 24px 48px;
   overflow-y: auto;
   flex: 1;
   display: flex;
   flex-direction: column;
-  gap: 28px;
+  gap: 16px;
 }
 
 .titleInput {
   width: 100%;
-  font-size: 22px;
+  font-size: 19px;
   font-weight: 600;
   color: var(--text-primary);
   background: transparent;
@@ -76,10 +76,11 @@
   border-bottom: 2px solid var(--tab-light);
   outline: none;
   resize: none;
-  line-height: 1.45;
+  line-height: 1.4;
   font-family: inherit;
-  padding-bottom: 8px;
-  min-height: 64px;
+  padding-bottom: 6px;
+  min-height: 0;
+  max-height: 80px;
   transition: border-color 0.15s;
 }
 
@@ -90,7 +91,7 @@
 .section {
   display: flex;
   flex-direction: column;
-  gap: 10px;
+  gap: 6px;
 }
 
 .sectionLabel {
@@ -145,7 +146,7 @@
 
 .memoInput {
   width: 100%;
-  min-height: 140px;
+  min-height: 200px;
   font-size: 14px;
   line-height: 1.65;
   color: var(--text-primary);
