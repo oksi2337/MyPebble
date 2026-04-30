@@ -140,12 +140,13 @@
 
 @media (prefers-color-scheme: dark) {
   .shell {
-    background: #0F0D0B;
+    background: #141210;
   }
 
   .card {
-    background: #252220;
-    box-shadow: 0 4px 24px rgba(0, 0, 0, 0.4);
+    background: #2C2824;
+    border: 1px solid rgba(255, 255, 255, 0.09);
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.6);
   }
 
   .logo {
@@ -153,17 +154,17 @@
   }
 
   .desc {
-    color: #625850;
+    color: #8A7E78;
   }
 
   .googleBtn {
-    background: #2A2520;
-    border-color: rgba(255, 255, 255, 0.12);
+    background: #38322E;
+    border-color: rgba(255, 255, 255, 0.14);
     color: #EDE8E2;
   }
 
   .googleBtn:hover {
-    background: #302B26;
-    border-color: rgba(255, 255, 255, 0.2);
+    background: #423C38;
+    border-color: rgba(255, 255, 255, 0.22);
   }
 }
