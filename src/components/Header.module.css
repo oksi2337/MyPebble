@@ -47,18 +47,22 @@
   transition: color 0.15s;
 }
 
-/* 라이트모드: 달 아이콘 → 주황 */
+/* 라이트모드: 달 아이콘 → 노란색 채우기 */
 .themeBtn:hover {
-  color: #E07820;
-}
-
-/* 다크모드: 해 아이콘 → 노란 테두리 + 원 채우기 */
-.themeBtn.isDark:hover {
   color: #FFD000;
 }
 
-.themeBtn.isDark:hover circle {
+.themeBtn:not(.isDark):hover path {
   fill: #FFD000;
+}
+
+/* 다크모드: 해 아이콘 → 주황 테두리 + 원 채우기 */
+.themeBtn.isDark:hover {
+  color: #E07820;
+}
+
+.themeBtn.isDark:hover circle {
+  fill: #E07820;
 }
 
 .noteBtn {
