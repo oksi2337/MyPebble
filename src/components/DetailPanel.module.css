@@ -163,12 +163,12 @@
 }
 
 .memoTab:hover {
-  color: var(--tab-primary);
+  color: var(--text-primary);
 }
 
 .memoTabActive {
-  background: var(--tab-light);
-  color: var(--tab-primary);
+  background: var(--handle);
+  color: var(--text-primary);
   font-weight: 700;
 }
 
