@@ -16,7 +16,7 @@
 .panel {
   width: 100%;
   max-width: 430px;
-  background: #fff;
+  background: var(--panel-bg);
   border-radius: 24px 24px 0 0;
   max-height: 88dvh;
   display: flex;
@@ -32,7 +32,7 @@
 .handle {
   width: 36px;
   height: 4px;
-  background: #e4e0dc;
+  background: var(--handle);
   border-radius: 2px;
   margin: 12px auto 0;
   flex-shrink: 0;
@@ -122,23 +122,67 @@
   color: var(--text-secondary, #555);
 }
 
-
 .dateError {
   font-size: 11px;
   color: #e63946;
   margin-top: 2px;
 }
 
-.memoInput {
-  width: 100%;
+/* 메모 두 칸 */
+.memoColumns {
+  display: flex;
+  gap: 10px;
   min-height: 200px;
-  font-size: 14px;
+}
+
+.memoColumn {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  min-width: 0;
+}
+
+.memoTabs {
+  display: flex;
+  gap: 3px;
+}
+
+.memoTab {
+  flex: 1;
+  font-size: 11px;
+  font-weight: 500;
+  color: var(--text-tertiary);
+  background: var(--cream, #fafaf8);
+  border: none;
+  border-radius: 8px;
+  padding: 5px 2px;
+  cursor: pointer;
+  transition: background 0.12s, color 0.12s;
+  white-space: nowrap;
+}
+
+.memoTab:hover {
+  color: var(--tab-primary);
+}
+
+.memoTabActive {
+  background: var(--tab-light);
+  color: var(--tab-primary);
+  font-weight: 700;
+}
+
+.memoInput {
+  flex: 1;
+  width: 100%;
+  min-height: 180px;
+  font-size: 13.5px;
   line-height: 1.65;
   color: var(--text-primary);
   background: var(--cream, #fafaf8);
   border: 1.5px solid var(--border, #e8e8e0);
-  border-radius: 14px;
-  padding: 14px 16px;
+  border-radius: 12px;
+  padding: 12px 12px;
   outline: none;
   resize: none;
   font-family: inherit;
@@ -151,4 +195,5 @@
 
 .memoInput::placeholder {
   color: var(--text-tertiary);
+  font-size: 12.5px;
 }

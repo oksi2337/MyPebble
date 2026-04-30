@@ -2,7 +2,7 @@ import styles from './Header.module.css'
 
 const DAYS = ['일', '월', '화', '수', '목', '금', '토']
 
-export default function Header({ user, onSignOut }) {
+export default function Header({ user, onSignOut, onNoteOpen }) {
   const today = new Date()
   const month = today.getMonth() + 1
   const date = today.getDate()
@@ -22,6 +22,15 @@ export default function Header({ user, onSignOut }) {
         Pebble
       </h1>
       <p className={styles.date}>{month}월 {date}일 {day}요일</p>
+      <button className={styles.noteBtn} onClick={onNoteOpen} aria-label="메모 열기">
+        <svg width="20" height="20" viewBox="0 0 20 20" fill="none">
+          <rect x="3" y="2" width="11" height="14" rx="2" stroke="currentColor" strokeWidth="1.5"/>
+          <path d="M14 5.5L17 5.5" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round"/>
+          <path d="M14 8.5L17 8.5" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round"/>
+          <path d="M14 11.5L17 11.5" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round"/>
+          <path d="M6 7H10M6 10H10M6 13H8" stroke="currentColor" strokeWidth="1.3" strokeLinecap="round"/>
+        </svg>
+      </button>
       <button className={styles.avatarBtn} onClick={onSignOut} title={`${name} · 로그아웃`}>
         {avatar
           ? <img className={styles.avatar} src={avatar} alt={name} referrerPolicy="no-referrer" />

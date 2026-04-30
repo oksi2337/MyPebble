@@ -5,7 +5,7 @@
   border: 1.5px solid var(--border, #e8e8e0);
   border-radius: 8px;
   padding: 4px 8px;
-  background: #fff;
+  background: var(--input-bg);
   transition: border-color 0.15s;
 }
 

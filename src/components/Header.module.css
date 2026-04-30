@@ -32,8 +32,26 @@
   flex: 1;
 }
 
-.avatarBtn {
+.noteBtn {
   margin-left: auto;
+  background: none;
+  border: none;
+  padding: 4px;
+  cursor: pointer;
+  color: var(--text-tertiary);
+  border-radius: 8px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  transition: color 0.15s;
+}
+
+.noteBtn:hover {
+  color: var(--tab-primary);
+}
+
+.avatarBtn {
   background: none;
   border: none;
   padding: 0;

@@ -229,5 +229,5 @@
 
 .deleteBtn:hover {
   color: #E63946;
-  background: #FFEAEA;
+  background: var(--danger-hover-bg);
 }

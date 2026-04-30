@@ -8,6 +8,7 @@ import TodoList from './components/TodoList'
 import AddTodoBar from './components/AddTodoBar'
 import LoginScreen from './components/LoginScreen'
 import DetailPanel from './components/DetailPanel'
+import NotePanel from './components/NotePanel'
 
 const fromDb = (row) => ({
   id: row.id,
@@ -40,6 +41,7 @@ function App() {
   const [workTodos, setWorkTodos] = useState([])
   const [recentlyAddedId, setRecentlyAddedId] = useState(null)
   const [selectedTodoId, setSelectedTodoId] = useState(null)
+  const [noteOpen, setNoteOpen] = useState(false)
 
   const todos = activeTab === 'personal' ? personalTodos : workTodos
   const setTodos = activeTab === 'personal' ? setPersonalTodos : setWorkTodos
@@ -122,7 +124,7 @@ function App() {
   return (
     <div className="app-shell">
       <div className="app-container" data-tab={activeTab}>
-        <Header user={user} onSignOut={signOut} />
+        <Header user={user} onSignOut={signOut} onNoteOpen={() => setNoteOpen(true)} />
         <TabBar activeTab={activeTab} onTabChange={setActiveTab} />
         <TodoList
           key={activeTab}
@@ -140,6 +142,13 @@ function App() {
           todo={selectedTodo}
           onClose={() => setSelectedTodoId(null)}
           onEdit={editTodo}
+        />
+      )}
+
+      {noteOpen && (
+        <NotePanel
+          userId={user.id}
+          onClose={() => setNoteOpen(false)}
         />
       )}
     </div>

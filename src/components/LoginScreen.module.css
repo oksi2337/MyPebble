@@ -135,3 +135,35 @@
   background: #f8f8f8;
   border-color: #ccc;
 }
+
+/* ── dark mode ── */
+
+@media (prefers-color-scheme: dark) {
+  .shell {
+    background: #0F0D0B;
+  }
+
+  .card {
+    background: #252220;
+    box-shadow: 0 4px 24px rgba(0, 0, 0, 0.4);
+  }
+
+  .logo {
+    color: #EDE8E2;
+  }
+
+  .desc {
+    color: #625850;
+  }
+
+  .googleBtn {
+    background: #2A2520;
+    border-color: rgba(255, 255, 255, 0.12);
+    color: #EDE8E2;
+  }
+
+  .googleBtn:hover {
+    background: #302B26;
+    border-color: rgba(255, 255, 255, 0.2);
+  }
+}
