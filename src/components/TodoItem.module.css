@@ -209,6 +209,37 @@
   margin-top: 1px;
 }
 
+/* Tab badge (이번 주 뷰) */
+.tabBadge {
+  font-size: 10px;
+  font-weight: 600;
+  padding: 2px 7px;
+  border-radius: 10px;
+  flex-shrink: 0;
+  align-self: flex-start;
+  margin-top: 2px;
+}
+
+.tabBadge.personal {
+  background: #EDDBD7;
+  color: #96584A;
+}
+
+.tabBadge.work {
+  background: #D8E0EE;
+  color: #3A4A62;
+}
+
+:global(html[data-theme="dark"]) .tabBadge.personal {
+  background: #3D2824;
+  color: #D4897A;
+}
+
+:global(html[data-theme="dark"]) .tabBadge.work {
+  background: #1E2A3A;
+  color: #7A8FA6;
+}
+
 /* Delete button */
 .deleteBtn {
   opacity: 0;

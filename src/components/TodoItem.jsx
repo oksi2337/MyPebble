@@ -3,7 +3,7 @@ import DdayBadge from './DdayBadge'
 import { formatDate } from '../utils/sortTodos'
 import styles from './TodoItem.module.css'
 
-export default function TodoItem({ todo, onToggle, onDelete, onOpenDetail, isNew }) {
+export default function TodoItem({ todo, onToggle, onDelete, onOpenDetail, isNew, isWeekView }) {
   const [completing, setCompleting] = useState(false)
   const [showDelete, setShowDelete] = useState(false)
   const longPressTimer = useRef(null)
@@ -80,6 +80,12 @@ export default function TodoItem({ todo, onToggle, onDelete, onOpenDetail, isNew
           )}
         </div>
       </div>
+
+      {isWeekView && todo.tab && (
+        <span className={`${styles.tabBadge} ${styles[todo.tab]}`}>
+          {todo.tab === 'personal' ? '개인' : '업무'}
+        </span>
+      )}
 
       <button
         className={`${styles.deleteBtn} ${showDelete ? styles.deleteVisible : ''}`}

@@ -20,6 +20,7 @@ const fromDb = (row) => ({
   createdAt: row.created_at,
   completedAt: row.completed_at,
   memo: row.memo || null,
+  tab: row.tab,
 })
 
 const toDb = (todo, userId, tab) => ({
@@ -85,6 +86,7 @@ function App() {
       createdAt: new Date().toISOString(),
       completedAt: null,
       memo: null,
+      tab: activeTab,
     }
     setTodos(prev => [...prev, newTodo])
     setRecentlyAddedId(newTodo.id)

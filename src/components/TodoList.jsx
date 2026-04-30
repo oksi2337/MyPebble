@@ -37,6 +37,7 @@ export default function TodoList({ todos, onToggle, onDelete, onOpenDetail, rece
           onDelete={onDelete}
           onOpenDetail={onOpenDetail}
           isNew={todo.id === recentlyAddedId}
+          isWeekView={isWeekView}
         />
       ))}
 
@@ -52,6 +53,7 @@ export default function TodoList({ todos, onToggle, onDelete, onOpenDetail, rece
               onDelete={onDelete}
               onOpenDetail={onOpenDetail}
               isNew={false}
+              isWeekView={isWeekView}
             />
           ))}
         </>
