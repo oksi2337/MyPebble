@@ -29,6 +29,25 @@ export function sortTodos(todos) {
   return [...withDeadline, ...withStartOnly, ...noDates, ...sortedCompleted]
 }
 
+export function getThisWeekTodos(allTodos) {
+  const today = new Date()
+  today.setHours(0, 0, 0, 0)
+  const dow = today.getDay()
+  const monday = new Date(today)
+  monday.setDate(today.getDate() - (dow === 0 ? 6 : dow - 1))
+  const sunday = new Date(monday)
+  sunday.setDate(monday.getDate() + 6)
+
+  const fmt = d =>
+    `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}-${String(d.getDate()).padStart(2, '0')}`
+  const start = fmt(monday)
+  const end = fmt(sunday)
+
+  return allTodos
+    .filter(t => !t.completed && t.deadline && t.deadline >= start && t.deadline <= end)
+    .sort((a, b) => a.deadline.localeCompare(b.deadline))
+}
+
 export function calcDday(deadline) {
   if (!deadline) return null
   const today = new Date()

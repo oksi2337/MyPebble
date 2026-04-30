@@ -1,7 +1,8 @@
-import { useState, useCallback, useEffect } from 'react'
+import { useState, useCallback, useEffect, useMemo } from 'react'
 import { useLocalStorage } from './hooks/useLocalStorage'
 import { useAuth } from './hooks/useAuth'
 import { supabase } from './lib/supabase'
+import { getThisWeekTodos } from './utils/sortTodos'
 import Header from './components/Header'
 import TabBar from './components/TabBar'
 import TodoList from './components/TodoList'
@@ -48,7 +49,10 @@ function App() {
     document.documentElement.setAttribute('data-theme', darkMode ? 'dark' : 'light')
   }, [darkMode])
 
-  const todos = activeTab === 'personal' ? personalTodos : workTodos
+  const isWeekView = activeTab === 'week'
+  const todos = isWeekView
+    ? getThisWeekTodos([...personalTodos, ...workTodos])
+    : activeTab === 'personal' ? personalTodos : workTodos
   const setTodos = activeTab === 'personal' ? setPersonalTodos : setWorkTodos
 
   const selectedTodo = selectedTodoId
@@ -89,25 +93,24 @@ function App() {
   }, [setTodos, user, activeTab])
 
   const toggleTodo = useCallback((id) => {
-    setTodos(prev => prev.map(todo => {
-      if (todo.id !== id) return todo
-      const updated = {
-        ...todo,
-        completed: !todo.completed,
-        completedAt: !todo.completed ? new Date().toISOString() : null,
-      }
-      supabase.from('todos')
-        .update({ completed: updated.completed, completed_at: updated.completedAt })
-        .eq('id', id)
-      return updated
-    }))
-  }, [setTodos])
+    const todo = [...personalTodos, ...workTodos].find(t => t.id === id)
+    if (!todo) return
+    const completed = !todo.completed
+    const completedAt = completed ? new Date().toISOString() : null
+    const updater = prev => prev.map(t =>
+      t.id === id ? { ...t, completed, completedAt } : t
+    )
+    setPersonalTodos(updater)
+    setWorkTodos(updater)
+    supabase.from('todos').update({ completed, completed_at: completedAt }).eq('id', id)
+  }, [personalTodos, workTodos])
 
   const deleteTodo = useCallback((id) => {
     setSelectedTodoId(prev => prev === id ? null : prev)
-    setTodos(prev => prev.filter(todo => todo.id !== id))
+    setPersonalTodos(prev => prev.filter(t => t.id !== id))
+    setWorkTodos(prev => prev.filter(t => t.id !== id))
     supabase.from('todos').delete().eq('id', id)
-  }, [setTodos])
+  }, [])
 
   const editTodo = useCallback((id, updates) => {
     const updateBoth = (setter) =>
@@ -138,8 +141,9 @@ function App() {
           onDelete={deleteTodo}
           onOpenDetail={setSelectedTodoId}
           recentlyAddedId={recentlyAddedId}
+          isWeekView={isWeekView}
         />
-        <AddTodoBar onAdd={addTodo} />
+        {!isWeekView && <AddTodoBar onAdd={addTodo} />}
       </div>
 
       {selectedTodo && (

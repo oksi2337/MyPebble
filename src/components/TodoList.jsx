@@ -3,7 +3,7 @@ import { sortTodos } from '../utils/sortTodos'
 import TodoItem from './TodoItem'
 import styles from './TodoList.module.css'
 
-export default function TodoList({ todos, onToggle, onDelete, onOpenDetail, recentlyAddedId }) {
+export default function TodoList({ todos, onToggle, onDelete, onOpenDetail, recentlyAddedId, isWeekView }) {
   const sorted = useMemo(() => sortTodos(todos), [todos])
   const incomplete = sorted.filter(t => !t.completed)
   const completed = sorted.filter(t => t.completed)
@@ -17,8 +17,12 @@ export default function TodoList({ todos, onToggle, onDelete, onOpenDetail, rece
             <path d="M14 20H26M20 14V26" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" />
           </svg>
         </div>
-        <p className={styles.emptyText}>할 일이 없어요</p>
-        <p className={styles.emptySubtext}>아래에서 새 할 일을 추가해보세요</p>
+        <p className={styles.emptyText}>
+          {isWeekView ? '이번 주 마감 할 일이 없어요' : '할 일이 없어요'}
+        </p>
+        <p className={styles.emptySubtext}>
+          {isWeekView ? '할 일에 마감일을 추가하면 여기서 볼 수 있어요' : '아래에서 새 할 일을 추가해보세요'}
+        </p>
       </div>
     )
   }

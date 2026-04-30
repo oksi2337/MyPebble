@@ -3,6 +3,7 @@ import styles from './TabBar.module.css'
 const TABS = [
   { id: 'personal', label: '개인' },
   { id: 'work', label: '업무' },
+  { id: 'week', label: '이번 주' },
 ]
 
 export default function TabBar({ activeTab, onTabChange }) {
