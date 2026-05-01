@@ -1,19 +1,19 @@
 import { useState, useEffect } from 'react'
 import { supabase } from '../lib/supabase'
 
-// localStorage에 남아있는 기존 세션을 쿠키 스토리지로 한 번만 마이그레이션
-function migrateLocalStorageSession() {
-  try {
-    const lsKeys = Object.keys(localStorage).filter(k => k.startsWith('sb-') && k.endsWith('-auth-token'))
-    for (const key of lsKeys) {
-      const val = localStorage.getItem(key)
-      if (val && !document.cookie.includes(key)) {
-        const secure = location.protocol === 'https:' ? '; Secure' : ''
-        document.cookie = `${key}=${encodeURIComponent(val)}; path=/; max-age=31536000; SameSite=Lax${secure}`
-      }
-      localStorage.removeItem(key)
-    }
-  } catch {}
+// iOS에서 Safari와 PWA는 localStorage를 공유하지 않지만 쿠키는 공유함.
+// refresh_token(~50바이트)만 쿠키에 저장해 PWA 재시작 시 세션 복원에 사용.
+const COOKIE = 'pebble_rt'
+const isSecure = () => location.protocol === 'https:' ? '; Secure' : ''
+const saveRT = (token) => {
+  document.cookie = `${COOKIE}=${token}; path=/; max-age=31536000; SameSite=Lax${isSecure()}`
+}
+const loadRT = () => {
+  const m = document.cookie.match(/(?:^|; )pebble_rt=([^;]+)/)
+  return m ? m[1] : null
+}
+const clearRT = () => {
+  document.cookie = `${COOKIE}=; path=/; max-age=0`
 }
 
 export function useAuth() {
@@ -21,14 +21,31 @@ export function useAuth() {
   const [loading, setLoading] = useState(true)
 
   useEffect(() => {
-    migrateLocalStorageSession()
-    supabase.auth.getSession().then(({ data: { session } }) => {
+    const init = async () => {
+      let { data: { session } } = await supabase.auth.getSession()
+
+      // localStorage에 세션이 없으면 쿠키의 refresh_token으로 복원 시도 (iOS PWA)
+      if (!session) {
+        const rt = loadRT()
+        if (rt) {
+          const { data } = await supabase.auth.refreshSession({ refresh_token: rt })
+          session = data.session
+        }
+      }
+
       setUser(session?.user ?? null)
       setLoading(false)
-    })
+    }
 
-    const { data: { subscription } } = supabase.auth.onAuthStateChange((_event, session) => {
+    init()
+
+    const { data: { subscription } } = supabase.auth.onAuthStateChange((event, session) => {
       setUser(session?.user ?? null)
+      if (session?.refresh_token) {
+        saveRT(session.refresh_token)
+      } else if (event === 'SIGNED_OUT') {
+        clearRT()
+      }
     })
 
     return () => subscription.unsubscribe()
@@ -40,7 +57,10 @@ export function useAuth() {
       options: { redirectTo: window.location.origin },
     })
 
-  const signOut = () => supabase.auth.signOut()
+  const signOut = async () => {
+    clearRT()
+    return supabase.auth.signOut()
+  }
 
   return { user, loading, signInWithGoogle, signOut }
 }
